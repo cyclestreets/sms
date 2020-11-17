@@ -1,0 +1,45 @@
+# Redirect host
+<VirtualHost *:80>
+	
+	# Available URL(s)
+	ServerName sms.example.com
+	
+	# Logging
+	CustomLog /var/log/apache/sms-access.log combined
+	ErrorLog /var/log/apache/sms-error.log
+	
+	# Redirect to HTTPS
+	RewriteEngine on
+	RewriteCond %{SERVER_PORT} =80
+	RewriteRule ^/(.*) https://sms.example.com/$1 [L,R]
+	
+</VirtualHost>
+
+
+# Main host, running SSL
+<VirtualHost *:443>
+	
+	# Available URL(s)
+	ServerName sms.example.com
+	
+	# Logging
+	CustomLog /var/log/apache/sms-access_ssl.log combined
+	ErrorLog /var/log/apache/sms-error_ssl.log
+	
+	# Where the files are
+	DocumentRoot /var/www/sms/
+	
+	# Allow access
+	<Directory />
+		Require all granted
+	</Directory>
+	
+	# Certificates
+	SSLEngine on
+	SSLCertificateFile     /etc/letsencrypt/live/sms.example.com/fullchain.pem
+	SSLCertificateKeyFile  /etc/letsencrypt/live/sms.example.com/privkey.pem
+	
+	# Enable PHP
+	DirectoryIndex index.html index.php
+	
+</VirtualHost>

@@ -1,0 +1,16 @@
+<?php
+
+# Define the configuration
+$config = array (
+	
+	# CycleStreets API key, for routing
+	'cyclestreetsApiKey' => 'YOUR_API_KEY',
+	
+	# Google API key, for Geocoding only
+	'googleApiKey' => 'YOUR_API_KEY',
+	
+	# Clockwork SMS API key
+	'clockworkApiKey' => 'YOUR_API_KEY',
+);
+
+?>
