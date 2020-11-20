@@ -28,6 +28,12 @@ class cyclestreetsSms
 		# Parse the route to streets
 		$directions = $this->directions ($route, $waypointNames);
 		
+		# If there are to many directions, say it is too long, to avoid excessive SMS fees
+		if (count ($directions) > 50) {
+			$error = "Sorry, this route has too many parts to send by text. Please request a shorter route.";
+			$this->send ($user, $message);
+		}
+		
 		# Construct the message
 		$message = $this->constructMessage ($directions, $waypointNames);
 		
