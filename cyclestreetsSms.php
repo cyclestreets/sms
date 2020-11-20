@@ -20,6 +20,7 @@ class cyclestreetsSms
 		# Get the waypoints
 		if (!$waypoints = $this->getWaypoints ($message, $waypointNames /* returned by reference */, $error /* returned by reference */)) {
 			$this->send ($user, $error);
+			return false;
 		}
 		
 		# Get the route
@@ -32,6 +33,7 @@ class cyclestreetsSms
 		if (count ($directions) > 50) {
 			$error = "Sorry, this route has too many parts to send by text. Please request a shorter route.";
 			$this->send ($user, $message);
+			return false;
 		}
 		
 		# Construct the message
