@@ -60,6 +60,13 @@ class cyclestreetsSms
 			}
 		}
 		
+		# If the waypoints are the same, end
+		#!# This doesn't yet deal with canonic equivalents, e.g. Downing Street to Downing St; it needs to check only the lat-lon part of the waypoints
+		if (count (array_unique ($waypoints)) == 1) {
+			$error = "The waypoints must be different. Please check and try again.";
+			return false;
+		}
+		
 		# Extract the destination name
 		$destination = end ($locations);
 		
