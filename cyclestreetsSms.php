@@ -26,6 +26,9 @@ class cyclestreetsSms
 		# Get the route
 		$route = $this->getRoute ($waypoints);
 		
+		# Obtain the overall length and time
+		$summaryDetails = $this->summaryDetails ($route);
+		
 		# Parse the route to streets
 		$directions = $this->directions ($route, $waypointNames);
 		
@@ -37,7 +40,7 @@ class cyclestreetsSms
 		}
 		
 		# Construct the message
-		$message = $this->constructMessage ($directions, $waypointNames);
+		$message = $this->constructMessage ($directions, $waypointNames, $summaryDetails);
 		
 		# Send SMS
 		$this->send ($user, $message);
@@ -121,6 +124,26 @@ class cyclestreetsSms
 		$result = file_get_contents ($url);
 		$route = json_decode ($result, true);
 		return $route;
+	}
+	
+	
+	# Obtain the overall length and time
+	private function summaryDetails ($route, $strategy = 'balanced')
+	{
+		# Find the summary
+		foreach ($route['features'] as $feature) {
+			$properties = $feature['properties'];
+			if ($properties['path'] == "plan/{$strategy}") {
+				
+				# Construct the summary details
+				$km = round ($properties['lengthMetres'] / 1000, 1);
+				$minutes = round ($properties['timeSeconds'] / 60, 1);
+				$string = " ({$km}km, {$minutes} minutes)";
+				
+				# Return the result
+				return $string;
+			}
+		}
 	}
 	
 	
@@ -232,10 +255,10 @@ class cyclestreetsSms
 	
 	
 	# Function to construct the message
-	private function constructMessage ($directions, $waypointNames)
+	private function constructMessage ($directions, $waypointNames, $summaryDetails)
 	{
 		# Construct the message
-		$message  = 'Route from ' . implode (' to ', $waypointNames) . ':';
+		$message  = 'Route from ' . implode (' to ', $waypointNames) . $summaryDetails . ':';
 		$message .= "\n\n" . implode ("\n", $directions);
 		$message .= "\n\nBye,\nCycleStreets xx";
 		
