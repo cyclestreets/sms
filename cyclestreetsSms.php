@@ -132,6 +132,9 @@ class cyclestreetsSms
 			# Extract the name and turn
 			$turn = $this->turnToSymbol ($properties['turnPrevText']);
 			$name = $this->shortenName ($properties['name']);
+			if (!$directions) {		// i.e. if first entry
+				$name .= $this->startDirection ($properties['startBearing']);
+			}
 			$distance = $properties['lengthMetres'];
 			$time = $properties['timeSeconds'];
 			
@@ -158,6 +161,36 @@ class cyclestreetsSms
 		
 		# Return the name
 		return $name;
+	}
+	
+	
+	# Function add a start direction modifier, e.g. ("Start at Thoday Street, heading North")
+	private function startDirection ($bearing)
+	{
+		# Round to nearest 45 degrees
+		$bearing = round ($bearing / 45) * 45;
+
+		# Define the angles
+		$angles = array (
+			0	=> 'North',
+			45	=> 'North-East',
+			90	=> 'East',
+			135	=> 'South-East',
+			180	=> 'South',
+			225	=> 'South-West',
+			270	=> 'West',
+			315	=> 'North-West',
+			360	=> 'North',
+		);
+		
+		# Look up the angle
+		$startDirection = $angles[$bearing];
+		
+		# Construct the string
+		$string = ", heading {$startDirection}";
+		
+		# Return the result
+		return $string;
 	}
 	
 	
