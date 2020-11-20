@@ -215,7 +215,7 @@ class cyclestreetsSms
 			# If the line would take the message over the limit, go to next image
 			if (($count + $length) > 450) {
 				$messageNumber++;
-				$header = 'Page 2:' . "\n";
+				$header = "Page {$messageNumber}:" . "\n";
 				$count = 0 + strlen ($header);
 				$messages[$messageNumber][] = $header;
 			}
